@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import recipeRoutes from "./routes/recipeRoutes.js";
+import verdnRoutes from "./routes/verdnRoutes.js";
+
 
 dotenv.config({ path: "./.env" });
 
@@ -35,6 +37,9 @@ app.post("/add-recipes", async (req, res) => {
 });
 
 app.use("/api/recipes", recipeRoutes);
+
+app.use("/api/verdn", verdnRoutes);
+
 
 app.get("/", (req, res) => res.send("MealGenie API is running"));
 
