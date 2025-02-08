@@ -5,7 +5,7 @@ import Recipe from "../models/Recipe.js";
 const router = express.Router();
 
 
-// ✅ Fix: Ensure Only One Response is Sent
+//  Fix: Ensure Only One Response is Sent
 router.post("/", async (req, res) => {
     try {
         const newRecipe = new Recipe(req.body);
@@ -13,13 +13,13 @@ router.post("/", async (req, res) => {
 
         console.log("🔥 Recipe Added to Database:", newRecipe);
 
-        // ✅ Send only one response
+        //  Send only one response
         return res.status(201).json({ success: true, recipe: newRecipe });
 
     } catch (error) {
         console.error("❌ Validation Error:", error.message);
 
-        // ✅ Ensure error response is only sent when needed
+        //  Ensure error response is only sent when needed
         if (!res.headersSent) {
             return res.status(400).json({ success: false, error: error.message });
         }
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
 
 
 
-// ✅ 1️⃣ Get All Recipes
+//  Get All Recipes
 router.get("/", async (req, res) => {
     try {
         const recipes = await Recipe.find();
@@ -39,18 +39,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// ✅ 2️⃣ Get Recipe by ID
-router.get("/:id", async (req, res) => {
-    try {
-        const recipe = await Recipe.findById(req.params.id);
-        if (!recipe) return res.status(404).json({ success: false, message: "Recipe not found" });
-        res.json({ success: true, recipe });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// ✅ 3️⃣ Filter Recipes by Dietary Requirements, Cuisine, and Budget
+// Filter Recipes by Dietary Requirements, Cuisine, and Budget
 router.get("/filter", async (req, res) => {
     try {
         const { dietary, cuisine, maxCost } = req.query;
@@ -67,7 +56,19 @@ router.get("/filter", async (req, res) => {
     }
 });
 
-// ✅ Delete Recipe (DELETE)
+// Get Recipe by ID
+router.get("/:id", async (req, res) => {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+        if (!recipe) return res.status(404).json({ success: false, message: "Recipe not found" });
+        res.json({ success: true, recipe });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+// Delete Recipe (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
         await Recipe.findByIdAndDelete(req.params.id);
