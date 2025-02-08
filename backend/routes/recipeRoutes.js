@@ -29,29 +29,39 @@ router.post("/", async (req, res) => {
 
 
 
-// ✅ Get Recipes by Dietary Requirement (GET)
+// ✅ 1️⃣ Get All Recipes
 router.get("/", async (req, res) => {
     try {
-        const { dietary, cuisine, budget } = req.query;
-        const filter = {};
-        
-        if (dietary) filter.dietary_requirements = dietary;
-        if (cuisine) filter.cuisine_type = cuisine;
-        if (budget) filter.cost_per_serving = { $lte: Number(budget) }; // Budget filter (under x amount)
-
-        const recipes = await Recipe.find(filter);
+        const recipes = await Recipe.find();
         res.json({ success: true, recipes });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// ✅ Get Single Recipe (GET)
+// ✅ 2️⃣ Get Recipe by ID
 router.get("/:id", async (req, res) => {
     try {
         const recipe = await Recipe.findById(req.params.id);
         if (!recipe) return res.status(404).json({ success: false, message: "Recipe not found" });
         res.json({ success: true, recipe });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ✅ 3️⃣ Filter Recipes by Dietary Requirements, Cuisine, and Budget
+router.get("/filter", async (req, res) => {
+    try {
+        const { dietary, cuisine, maxCost } = req.query;
+        const filter = {};
+
+        if (dietary) filter.dietary_requirements = dietary;
+        if (cuisine) filter.cuisine_type = cuisine;
+        if (maxCost) filter.cost_per_serving = { $lte: Number(maxCost) };  // Budget filter
+
+        const recipes = await Recipe.find(filter);
+        res.json({ success: true, recipes });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
