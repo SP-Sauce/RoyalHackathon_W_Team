@@ -1,9 +1,9 @@
 import express from "express";
-import { createPledgeTransaction } from "../controllers/verdnController.js";
+import { createPledgeForShoppingList } from "../controllers/verdnController.js";
 
 const router = express.Router();
 
 // ✅ Route to pledge sustainability impact
-router.post("/pledge", createPledgeTransaction);
+router.post("/pledge-shopping", createPledgeForShoppingList);
 
 export default router;

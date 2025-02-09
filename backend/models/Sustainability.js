@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const SustainabilitySchema = new mongoose.Schema({
-    recipe_id: { type: mongoose.Schema.Types.ObjectId, ref: "Recipe", required: true },
+    recipe_id: { type: mongoose.Schema.Types.ObjectId, ref: "Recipe", required: false },
     carbon_impact: { type: Number, default: 0 },  
     water_usage: { type: Number, default: 0 },  
     sustainability_score: { type: Number, default: 0 },  

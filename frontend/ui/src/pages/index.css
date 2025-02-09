@@ -149,6 +149,28 @@ box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     width: 100%;
   }
   
+  .meal-card {
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .selected-meal-plan {
+    background-color: #6c4b0a !important;
+    color: white !important;
+    border: 2px solid #f1eee2 !important;
+  }
+  
+  .unselected-meal-plan {
+    background-color: #f4eee2 !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+  
+  .selected-meal-plan:hover,
+  .unselected-meal-plan:hover {
+    transform: scale(1.05);
+  }
+  
   .min-box,
   .max-box {
     width: 50%;

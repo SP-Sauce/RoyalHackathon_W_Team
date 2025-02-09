@@ -1,0 +1,108 @@
+/* General Layout */
+.shopping-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4eee2;
+    padding: 20px;
+}
+
+/* Shopping List Box */
+.shopping-list-box {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    border: 3px solid black;
+}
+
+/* Header */
+.shopping-list-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #6c4b0a;
+    margin-bottom: 15px;
+}
+
+/* Shopping List Items */
+.shopping-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.shopping-list li {
+    font-size: 1.1rem;
+    background: #e1d7c3;
+    border-radius: 10px;
+    padding: 12px;
+    margin: 8px 0;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    transition: background 0.3s ease-in-out;
+}
+
+.shopping-list li:hover {
+    background: #d5c7af;
+}
+
+/* Total Cost Section */
+.shopping-list-total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #6c4b0a;
+    margin-top: 15px;
+    padding: 10px;
+    background: #f4eee2;
+    border-radius: 10px;
+}
+
+/* Back to Meal Plan Button */
+.confirm-button {
+    background-color: #6c4b0a;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-button:hover {
+    background-color: #4e3507;
+    transform: scale(1.05);
+}
+
+.sustainability-summary {
+    background: #e1d7c3;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    text-align: center;
+    border: 2px solid black;
+}
+
+.sustainability-summary h3 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #6c4b0a;
+}
+
+.sustainability-summary p {
+    font-size: 1rem;
+    color: black;
+    font-weight: 500;
+}
+
