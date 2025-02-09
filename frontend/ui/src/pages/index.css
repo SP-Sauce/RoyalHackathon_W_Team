@@ -1,678 +1,707 @@
-body{
-    background-color: #f4eee2;
-}
-
-.bg{
-    background: #f4eee2;
-}
-
-.center-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh; /* Full viewport height */
+/* ==========================================================================
+   CSS Variables & Global Settings
+   ========================================================================== */
+   :root {
+    /* Colors */
+    --background-color: #f4eee2;
+    --secondary-bg: #e1d7c3;
+    --light-bg: #f8f7f4;
+    --accent-color: #6c4b0a;
+    --accent-hover: #8b621d;
+    --text-color: #4a5568;
+    --error-bg: #fde8e7;
+    --error-color: #e74c3c;
+    --border-color: #000;
+    --modal-overlay-bg: rgba(0, 0, 0, 0.75);
+  
+    /* Shadows & Transitions */
+    --shadow-light: 0 4px 12px rgba(108, 75, 10, 0.1);
+    --shadow-medium: 0 8px 16px rgba(108, 75, 10, 0.15);
+    --transition-speed: 0.3s;
+  
+    /* Quantity Control Sizes */
+    --quantity-btn-size: 36px;
+    --quantity-btn-font-size: 1.25rem;
   }
   
-.centered-box {
+  /* ==========================================================================
+     Global & General Styles
+     ========================================================================== */
+  body,
+  .bg {
+    background-color: var(--background-color);
+  }
+  
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    line-height: 1.5;
+  }
+  
+  /* Centering Containers */
+  .center-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .centered-box {
+    background-color: var(--secondary-bg);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: #e1d7c3;
   }
-
-.dtrequirements-form{
+  
+  /* Input & Form Styles */
+  .input-container {
     display: flex;
     flex-direction: column;
-    width: 20rem;
-    border: 2px solid black;
-    background-color: #e1d7c3;
-    border-radius: 1.1rem;
-    padding: 3.5rem;
-}
-  
-.input-container {
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-width: 100%;
-height: 1fr;
-
-}
-
-.input-container > button:hover{
-    cursor: pointer;
-}
-
-.input-container >button >a{
-    color: black;
-    text-decoration: none;
-}
-
-.rounded-input {
-width: 300px;
-padding: 7px;
-border: 2px solid black;
-border-radius: 30px; /* Rounded edges */
-font-size: 16px;
-text-align: center;
-outline: none;
-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
-transition: all 0.3s ease;
-border-color: black;
-background-color: #e1d7c3;
-
-}
-
-.rounded-input:focus {
-box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.rounded-input::placeholder {
-    color: black;  /* Change to any color */
-    opacity: 1;  /* Ensures full visibility */
+    align-items: center;
+    width: 100%;
   }
-
+  .input-container > button:hover {
+    cursor: pointer;
+  }
+  .input-container > button > a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  /* Rounded Input */
+  .rounded-input {
+    width: 300px;
+    padding: 7px;
+    border: 2px solid var(--border-color);
+    border-radius: 30px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    background-color: var(--secondary-bg);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  .rounded-input:focus {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .rounded-input::placeholder {
+    color: #000;
+    opacity: 1;
+  }
   .rounded-input:focus::placeholder {
     color: transparent;
   }
   
-  .double-slider-box {
-    background-color: #e1d7c3;
-    border-radius: 10px;
-    padding: 20px;
+  /* Form Container */
+  .dtrequirements-form {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    border: 2px solid var(--border-color);
+    background-color: var(--secondary-bg);
+    border-radius: 1.1rem;
+    padding: 3.5rem;
+  }
+  
+  /* Slider Component */
+  .slider-container {
+    padding: 2rem 1rem;
+  }
+  .slider {
     width: 100%;
-    max-width: 300px;
-    margin: auto;
-  }
-  
-
-  
-  .range-slider input[type="range"] {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    transform: translateY(-50%);
-    background: none;
-    pointer-events: none;
+    height: 4px;
+    background: var(--background-color);
     appearance: none;
-    height: 5px;
   }
-  
-  input[type="range"]::-webkit-slider-thumb {
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    background: black;
-    pointer-events: auto;
+  .slider::-webkit-slider-thumb {
     appearance: none;
-    cursor: pointer;
-    box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
-    position: relative;
-    z-index: 2; /* Ensure thumbs appear above the track */
-  }
-  
-  input[type="range"]::-moz-range-thumb {
-    height: 25px;
-    width: 25px;
+    width: 20px;
+    height: 20px;
+    background: var(--accent-color);
     border-radius: 50%;
-    border: 3px solid #fff;
-    background: black;
-    pointer-events: auto;
     cursor: pointer;
-    box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
-    position: relative;
-    z-index: 2;
   }
+  /* (Add other vendor prefixes for cross-browser support as needed) */
   
-  .input-box {
+  /* Navigation Buttons */
+  .navigation-buttons {
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    gap: 1rem;
+    margin-top: 2rem;
   }
-  
-  .meal-card {
+  .nav-button,
+  .submit-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s ease-in-out;
+    transition: all 0.2s ease;
+  }
+  .nav-button {
+    background-color: var(--accent-color);
+    color: #fff;
+  }
+  .nav-button:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+  .submit-button {
+    background-color: #2ecc71;
+    color: #fff;
+  }
+  .submit-button:hover:not(:disabled) {
+    background-color: #27ae60;
   }
   
-  .selected-meal-plan {
-    background-color: #6c4b0a !important;
-    color: white !important;
-    border: 2px solid #f1eee2 !important;
+  /* Error Message */
+  .error-message {
+    background-color: var(--error-bg);
+    color: var(--error-color);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
   }
   
-  .unselected-meal-plan {
-    background-color: #f4eee2 !important;
-    color: black !important;
-    border: 1px solid black !important;
+  /* ==========================================================================
+     Meal Plan Layout & Side Panels
+     ========================================================================== */
+  /* Main Layout Container */
+  .meal-plan-overview {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    padding: 2.5rem;
+    min-height: 100vh;
+    background-color: var(--background-color);
   }
   
-  .selected-meal-plan:hover,
-  .unselected-meal-plan:hover {
+  /* Left Side Panel */
+  .meal-plan-leftside {
+    background-color: #fff;
+    border: 0.4rem solid var(--border-color);
+    border-radius: 0.7rem;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .meal-plan-stats {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px rgba(108, 75, 10, 0.1);
+  }
+  .meal-plan-stats h2 {
+    color: var(--accent-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--background-color);
+    padding-bottom: 1rem;
+  }
+  /* Budget & Nutrition Info */
+  .budget-info,
+  .nutrition-stats {
+    background: var(--light-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(108, 75, 10, 0.1);
+  }
+  .budget-info p,
+  .nutrition-stats p {
+    margin: 0.75rem 0;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* ==========================================================================
+     Recipe/Meal Cards & Right Side Grid
+     ========================================================================== */
+  .meal-plan-rightside {
+    background-color: #fff;
+    border: 0.4rem solid var(--border-color);
+    border-radius: 0.7rem;
+    padding: 2rem;
+    height: 80vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    align-content: start;
+  }
+  
+  /* Recipe Card */
+  /* We remove overflow: hidden and instead use a clip-path to retain rounded corners */
+  .recipe-card {
+    background: #fff;
+    border-radius: 16px;
+    clip-path: inset(0 round 16px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(108, 75, 10, 0.1);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  }
+  .recipe-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-medium);
+  }
+  
+  /* Recipe Info within Card */
+  .recipe-info {
+    padding: 1.5rem;
+    cursor: pointer;
+    flex: 1;
+  }
+  .recipe-info h3 {
+    color: var(--accent-color);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  .recipe-info p,
+  .recipe-basic-info {
+    color: var(--text-color);
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+  }
+  
+  /* Additional Recipe Details */
+  .cuisine-type {
+    color: var(--accent-color);
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .time-info {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    margin: 0.5rem 0;
+  }
+  .time-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .cost {
+    color: #2d3748;
+    font-weight: 500;
+    margin: 0.5rem 0;
+  }
+  
+  /* Nutrition Info (used in recipe cards) */
+  .nutrition-info {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--background-color);
+  }
+  .nutrition-info span {
+    color: #666;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* “View More” Link */
+  .view-more {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: right;
+    font-weight: 500;
+  }
+  
+  /* ==========================================================================
+     Modal Styling
+     ========================================================================== */
+  .modal-overlay {
+    background-color: var(--modal-overlay-bg);
+    backdrop-filter: blur(4px);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .recipe-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  .recipe-modal h2 {
+    color: var(--accent-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--background-color);
+    padding-bottom: 1rem;
+  }
+  /* Modal Content Sections (Overview, Requirements, etc.) */
+  .recipe-details,
+  .recipe-overview,
+  .recipe-requirements,
+  .recipe-nutritional-info,
+  .recipe-ingredients,
+  .recipe-method {
+    background: var(--light-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .recipe-details h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .requirements-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .dietary-tag {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+  .recipe-ingredients ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .recipe-ingredients li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(108, 75, 10, 0.1);
+    color: var(--text-color);
+  }
+  .recipe-method p {
+    line-height: 1.6;
+    color: var(--text-color);
+    white-space: pre-wrap;
+  }
+  /* Close Modal Button */
+  .close-modal-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-top: 1.5rem;
+  }
+  .close-modal-button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+  }
+  
+  /* ==========================================================================
+     Quantity Controls (used in multiple components)
+     ========================================================================== */
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    background: var(--light-bg);
+    border-top: 1px solid rgba(108, 75, 10, 0.1);
+  }
+  .quantity-button {
+    width: var(--quantity-btn-size);
+    height: var(--quantity-btn-size);
+    border-radius: 50%;
+    border: none;
+    background-color: var(--accent-color);
+    color: #fff;
+    font-size: var(--quantity-btn-font-size);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  .quantity-button:hover:not(:disabled) {
+    background-color: var(--accent-hover);
     transform: scale(1.05);
   }
-  
-  .min-box,
-  .max-box {
-    width: 50%;
+  .quantity-button:disabled {
+    background-color: #d1cdc4;
+    cursor: not-allowed;
   }
-  
-  .min-box {
-    margin-right: 10px;
-  }
-  .max-box input {
-    float: right;
-  }
-  input[type="number"] {
-    width: 40px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  .quantity-display {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    min-width: 2.5rem;
     text-align: center;
   }
   
-  
-  .min-tooltip {
-    left: 0;
-    transform: translateX(-50%);
+  /* ==========================================================================
+     Responsive Design
+     ========================================================================== */
+  @media (max-width: 1024px) {
+    .meal-plan-overview {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .meal-plan-leftside {
+      position: relative;
+      top: 0;
+    }
+  }
+  @media (max-width: 768px) {
+    .meal-plan-overview {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .meal-plan-overview {
+      padding: 1rem;
+    }
+    .recipe-info h3,
+    .meal-plan-stats h2 {
+      font-size: 1.5rem;
+    }
+    .recipe-info p,
+    .budget-info p,
+    .nutrition-stats p {
+      font-size: 1rem;
+    }
+    .recipe-info-grid {
+      grid-template-columns: 1fr;
+    }
+    .meal-plan-stats {
+      padding: 1.5rem;
+    }
   }
   
-  .max-tooltip {
-    right: 0;
-    transform: translateX(50%);
-  }
-  /* Chrome, Safari, Edge, and Opera */
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  /* Firefox */
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
-  
-.selectable-div{
-    border: 1.5px solid black;
-    background-color: white;
-    padding: 0.4rem;
-    width: fit-content;
-    height: auto;
-    border-radius: 1.3rem;
-    align-items: center;
-}
-
-.selectable-div > p{
-    font-weight: bold;
-    margin: 0;
-}
-
-.selected{
-    background-color: #6c4b0a;
-}
-
-.selected > p{
-    color: #f1eee2;
-}
-
-.selectable-div:hover{
-    cursor: pointer;
-}
-
-.floating-selectable-divs{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-  
-
-.container {
-    position: relative; /* Needed for absolute positioning of button */
-    
-    border-radius: 10px;
-  }
-  
-  .invisible-btn-right {
-    position: absolute;
-    bottom: 2px; /* Adjusts button position */
-    right: 2px; /* Change to left: 10px; for bottom-left */
-    
-    background: transparent;
-    border: none;
-    color: black; /* Keep text visible */
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px;
-  }
-
-  .invisible-btn-left {
-    position: absolute;
-    bottom: 2px; /* Adjusts button position */
-    left: 2px; /* Change to left: 10px; for bottom-left */
-    
-    background: transparent;
-    border: none;
-    color: black; /* Keep text visible */
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px;
-  }
-  
-  /* Optional: Add hover effect */
-  .invisible-btn:hover {
-    text-decoration: underline;
-  }
-
-
-/* Layout Components */
-.meal-plan-overview {
-  display: grid;
-  grid-template-columns: 45% 45%;
-  gap: 5%;
-  padding: 5rem;
-  height: 90vh;
-}
-
-/* Left Side Panel */
-.meal-plan-leftside {
-  background-color: white;
-  border: 0.4rem solid black;
-  border-radius: 0.7rem;
+  /* Dietary Requirements Page Styles */
+.dtrequirements-form {
   display: flex;
   flex-direction: column;
-  height: 80vh;
-}
-
-.meal-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 65%;
-  padding: 20px;
-}
-
-.weekly-meal-plan {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 80%;
-  margin: auto;
-  border-radius: 1.3rem;
-}
-
-.meal-list-updt {
-  background-color: #f4eee2;
-  border-radius: 2rem;
-  padding: 1rem;
-  width: 80%;
-  text-align: center;
-  margin: 10px auto;
-}
-
-.selected-meal-plan {
-  background-color: #555;
-  color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.unselected-meal-plan {
-  background-color: #f4eee2;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-/* Statistics Panel */
-.meal-plan-bottomleft {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 2rem;
-  margin-top: auto;
-}
-
-.meal-plan-bl-cost {
-  background-color: #f4eee2;
-  padding: 1rem;
-  border-radius: 1rem;
-  text-align: center;
-  font-weight: 600;
-}
-
-.meal-plan-bl-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.meal-plan-bl-col-element {
-  background-color: #f4eee2;
-  padding: 1rem;
-  border-radius: 2rem;
-  text-align: center;
-  transition: background-color 0.2s ease;
-}
-
-/* Right Side Panel */
-.meal-plan-rightside {
-  background-color: white;
-  border: 0.4rem solid black;
-  border-radius: 0.7rem;
-  padding: 2rem;
-  height: 80vh;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-flow: dense;
-  gap: 20px;
-}
-
-/* Meal Cards */
-.meal-card {
+  width: 100%;
+  max-width: 800px;
   background-color: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-.meal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-.meal-card:last-child {
-  grid-column: 1 / -1;
-  max-width: 50%;
-  margin: 0 auto;
-}
-
-.day-label {
-  color: #e67e22;
-  font-weight: 600;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 5px;
-}
-
-.meal-card h3 {
-  color: #2c3e50;
-  margin: 0 0 12px 0;
-  font-size: 1.2rem;
-}
-
-.meal-card p {
-  color: #7f8c8d;
-  margin: 8px 0;
-  font-size: 0.95rem;
-}
-
-.meal-nutrition {
-  margin-top: 15px;
-  padding-top: 12px;
-  border-top: 1px solid #ecf0f1;
-  display: flex;
-  gap: 10px;
-}
-
-.meal-nutrition span {
-  background: #f8f9fa;
-  padding: 6px 10px;
-  border-radius: 6px;
-  color: #34495e;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* Recipe Details */
-.recipe-overview {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.dietary-requirements ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.dietary-requirements li {
-  background-color: #e0e0e0;
-  padding: 6px 12px;
-  border-radius: 15px;
-  font-size: 0.9rem;
-  color: #2c3e50;
-}
-
-/* Modal Styles */
-.ReactModal__Content {
-  background: white !important;
-  border-radius: 12px !important;
-  padding: 25px !important;
-  max-width: 600px !important;
-  margin: auto !important;
-}
-
-.ReactModal__Overlay {
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(5px);
-}
-
-.buttons-and-count{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-.error-message {
-  color: #e74c3c;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  background-color: #fde8e7;
-}
-
-.loading-spinner {
-  text-align: center;
-  padding: 10px;
-  color: #3498db;
-}
-
-
-/* Budget Display */
-.budget-display {
-  text-align: center;
-  font-size: 1.2rem;
-  margin: 15px 0;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-/* Dietary Requirements Textarea */
-.dietary-textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 2px solid black;
-  background-color: white;
-  font-size: 0.9rem;
-  resize: vertical;
-}
-
-.dietary-textarea:focus {
-  outline: none;
-  border-color: #6c4b0a;
-}
-
-/* Submit Button */
-.submit-button {
-  background-color: #6c4b0a;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.submit-button:hover {
-  background-color: #8b621d;
-}
-
-.submit-button:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-
-.budget-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #6c4b0a;
-  cursor: pointer;
-  border: 2px solid white;
-}
-
-.budget-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #6c4b0a;
-  cursor: pointer;
-  border: 2px solid white;
-}
-
-/* Single Slider Styles */
-.single-slider-box {
-  width: 100%;
-  padding: 20px;
-  position: relative;
-}
-
-.range-slider {
-  position: relative;
-  width: 100%;
-  height: 5px;
-  margin: 20px 0;
-}
-
-.slider-track {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: #d1d1d1;
-  border-radius: 5px;
-}
-
-.slider-input {
-  position: absolute;
-  width: 100%;
-  height: 5px;
-  background: none;
-  pointer-events: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.slider-input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #6c4b0a;
-  cursor: pointer;
-  pointer-events: auto;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.slider-input::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #6c4b0a;
-  cursor: pointer;
-  pointer-events: auto;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.value-tooltip {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #6c4b0a;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  pointer-events: none;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-medium);
+  margin: 2rem auto;
 }
 
 .question-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 2rem;
 }
 
+.question-container h3 {
+  color: var(--accent-color);
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+/* Cuisine Selection Grid */
+.floating-selectable-divs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.selectable-div {
+  background: var(--light-bg);
+  padding: 1.2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: 2px solid var(--accent-color);
+  transition: all 0.2s ease;
+}
+
+.selectable-div.selected {
+  background: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.selectable-div:hover:not(.selected) {
+  background: var(--secondary-bg);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Slider Styling */
+.slider-container {
+  padding: 2rem;
+  width: 100%;
+  position: relative;
+}
+
+.slider {
+  width: 100%;
+  height: 8px; /* Increased from 6px */
+  background: var(--secondary-bg);
+  appearance: none;
+  border-radius: 4px;
+  outline: none;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Slider Track Styling */
+.slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(to right, var(--accent-color) 0%, var(--accent-hover) 100%);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Slider Thumb Styling */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 28px; /* Increased from 24px */
+  height: 28px; /* Increased from 24px */
+  background: white;
+  border: 3px solid var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -10px; /* Centers the thumb on the track */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-hover);
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+  background: var(--accent-color);
+  border-color: white;
+}
+
+/* Budget Display */
+.budget-display {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--accent-color);
+  font-weight: bold;
+  margin: 1.5rem 0;
+}
+
+/* Dietary Requirements Textarea */
+.dietary-textarea {
+  width: 100%;
+  min-height: 80px; /* Reduced from 120px */
+  max-height: 200px;
+  padding: 1rem;
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background-color: var(--light-bg);
+  color: var(--text-color);
+}
+.dietary-textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(108, 75, 10, 0.1);
+  transform: translateY(-2px);
+}
+
+.dietary-textarea::placeholder {
+  color: #999;
+}
+/* Navigation Buttons */
 .navigation-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
-  padding: 0 20px;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
 }
 
 .nav-button {
-  background-color: #6c4b0a;
-  color: white;
-  padding: 10px 20px;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 12px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 1.1rem;
   font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.nav-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .nav-button:hover:not(:disabled) {
-  background-color: #8b621d;
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
 }
 
-.submit-button {
-  background-color: #2ecc71;
+.nav-button:disabled {
+  background-color: #d1cdc4;
+  cursor: not-allowed;
 }
 
-.submit-button:hover:not(:disabled) {
-  background-color: #27ae60;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dtrequirements-form {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .floating-selectable-divs {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .question-container h3 {
+    font-size: 1.5rem;
+  }
+
+  .budget-display {
+    font-size: 1.8rem;
+  }
+
+  .nav-button {
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-selectable-divs {
+    grid-template-columns: 1fr;
+  }
 }

@@ -44,60 +44,38 @@ const DietaryRequirements = () => {
 
     const handleSubmit = async () => {
         try {
-            if (selectedCuisines.length === 0) {
-                setError('Please select at least one cuisine')
-                setQuestion(1)
-                return
-            }
-    
-            const dietaryReqs = dietaryRequirements.current?.value.trim()
-            if (!dietaryReqs) {
-                setError('Please enter dietary requirements')
-                return
-            }
-    
-            setIsLoading(true)
-            setError(null)
+            setIsLoading(true);
+            setError(null);
             
-            // Clean and validate dietary requirements
-            const cleanedDietaryReqs = dietaryReqs
-                .split(',')
-                .map(req => req.trim().toLowerCase())
-                .filter(req => req.length > 0)  // Remove empty entries
-    
-            if (cleanedDietaryReqs.length === 0) {
-                setError('Please enter valid dietary requirements')
-                return
-            }
-    
+            const dietaryReqs = dietaryRequirements.current?.value.trim();
+            
+            // Allow empty selections
             const requestBody = {
                 cuisines: selectedCuisines.map(c => c.toLowerCase()),
-                dietaryRequirements: cleanedDietaryReqs
-            }
+                dietaryRequirements: dietaryReqs ? 
+                    dietaryReqs.split(',').map(req => req.trim().toLowerCase()).filter(req => req.length > 0) 
+                    : []
+            };
             
-            console.log('Sending request with:', JSON.stringify(requestBody, null, 2))
+            console.log('Sending request with:', JSON.stringify(requestBody, null, 2));
                 
-            const response = await axios.post('http://localhost:3001/api/recipes/filter', requestBody)
+            const response = await axios.post('http://localhost:3001/api/recipes/filter', requestBody);
         
             if (response.data.success) {
-                if (response.data.recipes.length === 0) {
-                    setError('No recipes found matching your criteria')
-                    return
-                }
                 navigate('/mealplan', { 
                     state: { 
                         recipes: response.data.recipes,
                         budget: budget
                     }
-                })
+                });
             }
         } catch (error) {
-            console.error('Request failed:', error.response || error)
-            setError('Failed to filter recipes. Please try again.')
+            console.error('Request failed:', error.response || error);
+            setError('Failed to filter recipes. Please try again.');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className='bg center-container'>
