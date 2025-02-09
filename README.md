@@ -1,4 +1,4 @@
-![logo without name](https://github.com/user-attachments/assets/d7f7abe0-cc24-466b-bdca-466e899ead01)
+![8](https://github.com/user-attachments/assets/29b62367-bfb7-4d46-89b2-c8f9ae6fdd24)
 BiteWise ReadMe
 Requisites
 Before starting the application, ensure you have the following installed:
