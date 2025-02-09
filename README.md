@@ -81,7 +81,7 @@ Edit src/config.js to update API endpoints and UI settings.
 Supported Inputs
 Users can enter:
 
-Meal preferences (e.g., "vegetarian", "high protein", "low carb")
+\nMeal preferences (e.g., "vegetarian", "high protein", "low carb")
 Favourite cuisines (e.g., "Italian", "Indian", "Japanese")
 Dietary needs (e.g., "gluten-free", "nut-free")
 Budget constraints (e.g., "under £30 per week")
