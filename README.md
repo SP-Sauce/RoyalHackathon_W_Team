@@ -1,4 +1,4 @@
-![8](https://github.com/user-attachments/assets/1f4b07a5-4ad6-4bd4-9e9c-794f400fb82a)
+![8](https://github.com/user-attachments/assets/6c2dd08a-04a0-4599-bdc3-62822f86cf68)
 BiteWise ReadMe
 Requisites
 Before starting the application, ensure you have the following installed:
