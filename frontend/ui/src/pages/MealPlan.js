@@ -23,6 +23,10 @@ const MealPlan = () => {
         protein: 0,
         carbohydrates: 0
     })
+    const [orders, setOrders] = useState([])
+    const [total, setTotal] = useState(0)
+
+    const budget = 30;
 
     // Fetch recipes when component mounts
     useEffect(() => {
@@ -86,6 +90,24 @@ const MealPlan = () => {
     const toggleMealPlanView = (e) => {
         setMealPlanView(`Week${e.target.id}`)
     }
+
+    const getTotalCost = () => {
+        let sum = 0;
+
+        for (let i = 0; i < orders.length; i++) {
+            sum += orders[i];
+        }
+
+        
+
+        setTotal(sum)
+    }
+
+    useEffect(() => {
+        const sum = orders.reduce((acc, order) => acc + order, 0);
+        setTotal(sum);
+    }, [orders]);
+
 
     return (
         <div className='meal-plan-overview'>
@@ -159,7 +181,7 @@ const MealPlan = () => {
                 <div className='meal-plan-bottomleft'>
                     {/*Total cost */}
                     <div className='meal-plan-bl-cost'>
-                        Total cost: £{stats.totalCost.toFixed(2)}
+                        Total cost: £{total}
                     </div>
                     {/* Vertical stats */}
                     <div className='meal-plan-bl-col'>
@@ -182,6 +204,12 @@ const MealPlan = () => {
                     <Meal 
                         name={recipe.recipe_name}
                         viewIngredients={viewIngredients}
+                        price={recipe.cost_per_serving}
+                        setOrders={setOrders}
+                        orders={orders}
+                        budget={budget}
+                        getTotalCost={getTotalCost}
+                        recipe={recipe}
                     >
                         <div className="meal-card" onClick={(e) => {
                             e.preventDefault();
