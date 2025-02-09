@@ -178,29 +178,30 @@ const MealPlan = () => {
 
             {/* Right side */}
             <div id='meal-plan-rightside' className='meal-plan-rightside'>
-    {displayedRecipes && displayedRecipes.map((recipe, index) => (
-        <Meal 
-            key={index}
-            name={recipe.recipe_name}
-            viewIngredients={viewIngredients}
-        >
-            <div className="meal-card" onClick={(e) => {
-                e.preventDefault();
-                setSelectedRecipe(recipe);
-                setIsOpen(true);
-            }}>
-                <div className="day-label">{daysOfWeek[index]}</div>
-                <h3>{recipe.recipe_name}</h3>
-                <p>{recipe.cuisine_type} • {recipe.prep_time + recipe.cook_time} mins</p>
-                <p>£{(recipe.cost_per_serving || 0).toFixed(2)} per serving</p>
-                <div className="meal-nutrition">
-                    <span>{recipe.calories_per_serving || 0} kcal</span>
-                    <span>{recipe.protein_per_serving || 0}g protein</span>
-                </div>
+                {displayedRecipes && displayedRecipes.map((recipe, index) => (
+                    <Meal 
+                        name={recipe.recipe_name}
+                        viewIngredients={viewIngredients}
+                    >
+                        <div className="meal-card" onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedRecipe(recipe);
+                            setIsOpen(true);
+                        }}>
+                            <div className="day-label">
+                                {daysOfWeek[index]}
+                            </div>
+                            <h3>{recipe.recipe_name}</h3>
+                            <p>{recipe.cuisine_type} • {recipe.prep_time + recipe.cook_time} mins</p>
+                            <p>£{(recipe.cost_per_serving || 0).toFixed(2)} per serving</p>
+                            <div className="meal-nutrition">
+                                <span>{recipe.calories_per_serving || 0} kcal</span>
+                                <span>{recipe.protein_per_serving || 0}g protein</span>
+                            </div>
+                        </div>
+                    </Meal>
+                ))}
             </div>
-        </Meal>
-    ))}
-</div>
         </div>
     )
 }
