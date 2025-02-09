@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import MealWeek from './MealPlanComponents/MealWeek'
+import React, { useState, useEffect, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import Meal from './MealPlanComponents/Meal'
 import './index.css'
 import Modal from 'react-modal'
@@ -7,14 +7,21 @@ import Modal from 'react-modal'
 Modal.setAppElement("#root")
 
 const MealPlan = () => {
-    const mealPlans = ['Week1', 'Week2', 'Week3', 'Week4']
-    const meals = ['1', '2', '3', '4', '5', '6', '7']
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const location = useLocation();
+    const filteredRecipes = useMemo(() => 
+        location.state?.recipes || [], 
+        [location.state?.recipes]
+    );
+    const budget = location.state?.budget || 0;
+
+    // Filter recipes by budget here instead of in backend
+    const budgetFilteredRecipes = useMemo(() => 
+        filteredRecipes.filter(recipe => recipe.cost_per_serving <= budget),
+        [filteredRecipes, budget]
+    );
 
     const [allRecipes, setAllRecipes] = useState([])
     const [displayedRecipes, setDisplayedRecipes] = useState([])
-    const [mealPlanView, setMealPlanView] = useState('Week1')
-    const [recipes, setRecipes] = useState([])
     const [selectedRecipe, setSelectedRecipe] = useState(null)
     const [isOpen, setIsOpen] = useState(false)
     const [stats, setStats] = useState({
@@ -23,81 +30,99 @@ const MealPlan = () => {
         protein: 0,
         carbohydrates: 0
     })
+    const [orders, setOrders] = useState([])
+    const [total, setTotal] = useState(0)
 
-    // Fetch recipes when component mounts
-    useEffect(() => {
-        const fetchRecipes = async () => {
-            try {
-                const response = await fetch('/api/recipes')
-                const data = await response.json()
-                if (data.success) {
-                    setAllRecipes(data.recipes)
-                    // Initially show Week1 recipes
-                    const week1Recipes = data.recipes.slice(0, 7)
-                    setDisplayedRecipes(week1Recipes)
-                    setRecipes(data.recipes) // Keep for backward compatibility
-                    calculateStats(week1Recipes)
-                }
-            } catch (error) {
-                console.error('Failed to fetch recipes:', error)
-            }
-        }
-        fetchRecipes()
-    }, [])
+    const budget = 30;
 
-    // Add new useEffect for week changes
-    useEffect(() => {
-        if (allRecipes.length > 0) {
-            const weekNumber = parseInt(mealPlanView.replace('Week', ''))
-            const startIndex = (weekNumber - 1) * 7
-            const weekRecipes = allRecipes.slice(startIndex, startIndex + 7)
-            setDisplayedRecipes(weekRecipes)
-            calculateStats(weekRecipes)
-        }
-    }, [mealPlanView, allRecipes])
-
-    // Calculate statistics based on recipes
+    // Calculate stats when recipes change
     const calculateStats = (recipesList) => {
-        const stats = recipesList.reduce((acc, recipe) => {
-            return {
-                totalCost: acc.totalCost + (recipe.cost_per_serving || 0),
-                calories: acc.calories + (recipe.calories_per_serving || 0),
-                protein: acc.protein + (recipe.protein_per_serving || 0),
-                carbohydrates: acc.carbohydrates + (recipe.carbs_per_serving || 0)
-            }
-        }, {
+        const newStats = recipesList.reduce((acc, recipe) => ({
+            totalCost: acc.totalCost + (recipe.cost_per_serving || 0),
+            calories: acc.calories + (recipe.calories_per_serving || 0),
+            protein: acc.protein + (recipe.protein_per_serving || 0),
+            carbohydrates: acc.carbohydrates + (recipe.carbs_per_serving || 0)
+        }), {
             totalCost: 0,
             calories: 0,
             protein: 0,
             carbohydrates: 0
-        })
-        setStats(stats)
-    }
+        });
+        setStats(newStats);
+    };
 
-    // Update viewIngredients to use recipe_name
+    // Handle filtered recipes
+    useEffect(() => {
+        if (budgetFilteredRecipes.length > 0) {
+            setAllRecipes(budgetFilteredRecipes);
+            setDisplayedRecipes(budgetFilteredRecipes);
+            calculateStats(budgetFilteredRecipes);
+        } else {
+            // Only fetch all recipes if no filtered recipes exist
+            const fetchRecipes = async () => {
+                try {
+                    const response = await fetch('/api/recipes');
+                    const data = await response.json();
+                    if (data.success) {
+                        setAllRecipes(data.recipes);
+                        setDisplayedRecipes(data.recipes);
+                        calculateStats(data.recipes);
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch recipes:', error);
+                }
+            };
+            fetchRecipes();
+        }
+    }, [budgetFilteredRecipes]);
+
     const viewIngredients = (e) => {
-        e.preventDefault()
-        const recipeName = e.currentTarget.getAttribute("data-name")
-        const recipe = allRecipes.find(r => r.recipe_name === recipeName) // Changed from recipes to allRecipes
-        setSelectedRecipe(recipe)
-        setIsOpen(true)
+        e.preventDefault();
+        const recipeName = e.currentTarget.getAttribute("data-name");
+        const recipe = allRecipes.find(r => r.recipe_name === recipeName);
+        setSelectedRecipe(recipe);
+        setIsOpen(true);
+    };
+
+    const getTotalCost = () => {
+        let sum = 0;
+
+        for (let i = 0; i < orders.length; i++) {
+            sum += orders[i];
+        }
+
+        
+
+        setTotal(sum)
     }
 
-    const toggleMealPlanView = (e) => {
-        setMealPlanView(`Week${e.target.id}`)
-    }
+    useEffect(() => {
+        const sum = orders.reduce((acc, order) => acc + order, 0);
+        setTotal(sum);
+    }, [orders]);
+
 
     return (
         <div className='meal-plan-overview'>
             <Modal 
                 isOpen={isOpen}
-                parentSelector={() => document.getElementById('meal-plan-rightside')}
                 onRequestClose={() => setIsOpen(false)}
                 style={{
-                    overlay: { backgroundColor: "rgba(0, 0, 0, 0.3)" }, 
-                    content: { position: "absolute", inset: "10px", borderRadius: "8px" },
+                    overlay: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+                    content: { 
+                        position: "absolute",
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: '600px',
+                        width: '90%',
+                        maxHeight: '90vh',
+                        overflow: 'auto',
+                        borderRadius: "8px"
+                    }
                 }}
             >
+                {/* Modal content */}
                 <h2>{selectedRecipe?.recipe_name || 'Recipe Details'}</h2>
                 <div className="recipe-details">
                     {selectedRecipe ? (
@@ -107,7 +132,7 @@ const MealPlan = () => {
                                 <p>Prep Time: {selectedRecipe.prep_time} mins</p>
                                 <p>Cook Time: {selectedRecipe.cook_time} mins</p>
                                 <p>Servings: {selectedRecipe.servings}</p>
-                                <p>Cost per Serving: £{selectedRecipe.cost_per_serving}</p>
+                                <p>Cost per Serving: £{selectedRecipe.cost_per_serving?.toFixed(2)}</p>
                             </div>
                             <div className="dietary-requirements">
                                 <h3>Dietary Requirements:</h3>
@@ -140,28 +165,12 @@ const MealPlan = () => {
                 <button onClick={() => setIsOpen(false)}>Close</button>
             </Modal>
 
-            {/* left side */}
+            {/* Main content */}
             <div className='meal-plan-leftside'>
-                {/* Meal weeks */}
-                <div className='meal-list'>
-                    {mealPlans.map((item, index) => (
-                        <MealWeek 
-                            key={index}
-                            id={index+1} 
-                            mealPlanView={mealPlanView} 
-                            toggleMealPlanView={toggleMealPlanView}
-                        >
-                            {item}
-                        </MealWeek>
-                    ))}
-                </div>
-                {/* Statistics */}
                 <div className='meal-plan-bottomleft'>
-                    {/*Total cost */}
                     <div className='meal-plan-bl-cost'>
-                        Total cost: £{stats.totalCost.toFixed(2)}
+                        Total cost: £{total}
                     </div>
-                    {/* Vertical stats */}
                     <div className='meal-plan-bl-col'>
                         <div className='meal-plan-bl-col-element'>
                             Calories: {stats.calories.toFixed(0)} kcal
@@ -176,21 +185,23 @@ const MealPlan = () => {
                 </div>
             </div>
 
-            {/* Right side */}
             <div id='meal-plan-rightside' className='meal-plan-rightside'>
-                {displayedRecipes && displayedRecipes.map((recipe, index) => (
+                {displayedRecipes?.map((recipe, index) => (
                     <Meal 
+                        key={recipe._id || index}
                         name={recipe.recipe_name}
                         viewIngredients={viewIngredients}
+                        price={recipe.cost_per_serving}
+                        setOrders={setOrders}
+                        orders={orders}
+                        budget={budget}
+                        getTotalCost={getTotalCost}
+                        recipe={recipe}
                     >
-                        <div className="meal-card" onClick={(e) => {
-                            e.preventDefault();
+                        <div className="meal-card" onClick={() => {
                             setSelectedRecipe(recipe);
                             setIsOpen(true);
                         }}>
-                            <div className="day-label">
-                                {daysOfWeek[index]}
-                            </div>
                             <h3>{recipe.recipe_name}</h3>
                             <p>{recipe.cuisine_type} • {recipe.prep_time + recipe.cook_time} mins</p>
                             <p>£{(recipe.cost_per_serving || 0).toFixed(2)} per serving</p>
@@ -201,9 +212,14 @@ const MealPlan = () => {
                         </div>
                     </Meal>
                 ))}
+                {!displayedRecipes?.length && (
+                    <div className="no-recipes">
+                        No recipes match your criteria
+                    </div>
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default MealPlan
+export default MealPlan;

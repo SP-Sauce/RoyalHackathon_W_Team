@@ -87,23 +87,7 @@ box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     margin: auto;
   }
   
-  .range-slider {
-    position: relative;
-    width: 100%;
-    height: 5px;
-    margin: 30px 0;
-    background-color: #8a8a8a;
-    border-radius: 5px;
-  }
-  
-  .slider-track {
-    height: 100%;
-    position: absolute;
-    background-color: black;
-    left: 0;
-    right: 100%;
-    border-radius: 5px;
-  }
+
   
   .range-slider input[type="range"] {
     position: absolute;
@@ -190,19 +174,6 @@ box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     text-align: center;
   }
   
-  .min-tooltip,
-  .max-tooltip {
-    position: absolute;
-    top: -35px;
-    font-size: 12px;
-    color: #555;
-    background-color: #fff;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    white-space: nowrap;
-    z-index: 1;
-  }
   
   .min-tooltip {
     left: 0;
@@ -500,4 +471,208 @@ box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 .ReactModal__Overlay {
   background-color: rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(5px);
+}
+
+.buttons-and-count{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+.error-message {
+  color: #e74c3c;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #fde8e7;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 10px;
+  color: #3498db;
+}
+
+
+/* Budget Display */
+.budget-display {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 15px 0;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Dietary Requirements Textarea */
+.dietary-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 2px solid black;
+  background-color: white;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.dietary-textarea:focus {
+  outline: none;
+  border-color: #6c4b0a;
+}
+
+/* Submit Button */
+.submit-button {
+  background-color: #6c4b0a;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #8b621d;
+}
+
+.submit-button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+
+.budget-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6c4b0a;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.budget-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6c4b0a;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+/* Single Slider Styles */
+.single-slider-box {
+  width: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+.range-slider {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  margin: 20px 0;
+}
+
+.slider-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: #d1d1d1;
+  border-radius: 5px;
+}
+
+.slider-input {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  background: none;
+  pointer-events: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6c4b0a;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.slider-input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6c4b0a;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.value-tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #6c4b0a;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.nav-button {
+  background-color: #6c4b0a;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.nav-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #8b621d;
+}
+
+.submit-button {
+  background-color: #2ecc71;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #27ae60;
 }

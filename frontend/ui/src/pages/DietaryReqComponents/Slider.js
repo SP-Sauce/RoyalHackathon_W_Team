@@ -1,160 +1,71 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import '../index.css'
 
-const Slider = ({min, max}) => {
-    const initialMinPrice = min;
-    const initialMaxPrice = max;
-  
-    const [sliderMinValue] = useState(initialMinPrice);
-    const [sliderMaxValue] = useState(initialMaxPrice);
-  
-    const [minVal, setMinVal] = useState(initialMinPrice);
-    const [maxVal, setMaxVal] = useState(initialMaxPrice);
-    const [minInput, setMinInput] = useState(initialMinPrice);
-    const [maxInput, setMaxInput] = useState(initialMaxPrice);
-  
+const Slider = ({ min, max, value, onChange }) => {
     const [isDragging, setIsDragging] = useState(false);
-  
-    const minGap = 5;
+    const [currentValue, setCurrentValue] = useState(value);
 
-    const slideMin = (e) => {
-        const value = parseInt(e.target.value, 10);
-        if (value >= sliderMinValue && maxVal - value >= minGap) {
-          setMinVal(value);
-          setMinInput(value);
-        }
-      };
-    
-    const slideMax = (e) => {
-        const value = parseInt(e.target.value, 10);
-        if (value <= sliderMaxValue && value - minVal >= minGap) {
-          setMaxVal(value);
-          setMaxInput(value);
-        }
-      };
+    const handleSlide = (e) => {
+        const newValue = parseInt(e.target.value, 10);
+        setCurrentValue(newValue);
+        onChange(newValue);
+    };
 
-    const setSliderTrack = () => {
-        const range = document.querySelector(".slider-track");
-    
-        if (range) {
-          const minPercent =
-            ((minVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-          const maxPercent =
-            ((maxVal - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100;
-    
-          range.style.left = `${minPercent}%`;
-          range.style.right = `${100 - maxPercent}%`;
-        }
-      };
-    
-    useEffect(() => {
-        setSliderTrack();
-      }, [minVal, maxVal]);
+    const startDrag = () => setIsDragging(true);
+    const stopDrag = () => setIsDragging(false);
 
-    const handleMinInput = (e) => {
-        const value =
-          e.target.value === "" ? sliderMinValue : parseInt(e.target.value, 10);
-        if (value >= sliderMinValue && value < maxVal - minGap) {
-          setMinInput(value);
-          setMinVal(value);
+    const handleInputChange = (e) => {
+        const newValue = parseInt(e.target.value, 10);
+        if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+            setCurrentValue(newValue);
+            onChange(newValue);
         }
-      };
-    
-    const handleMaxInput = (e) => {
-        const value =
-          e.target.value === "" ? sliderMaxValue : parseInt(e.target.value, 10);
-        if (value <= sliderMaxValue && value > minVal + minGap) {
-          setMaxInput(value);
-          setMaxVal(value);
-        }
-      };
-    
-    const handleInputKeyDown = (e, type) => {
-        if (e.key === "Enter") {
-          const value = parseInt(e.target.value, 10);
-          if (
-            type === "min" &&
-            value >= sliderMinValue &&
-            value < maxVal - minGap
-          ) {
-            setMinVal(value);
-          } else if (
-            type === "max" &&
-            value <= sliderMaxValue &&
-            value > minVal + minGap
-          ) {
-            setMaxVal(value);
-          }
-        }
-      };
+    };
 
-      const startDrag = () => {
-        setIsDragging(true);
-      };
-    
-      const stopDrag = () => {
-        setIsDragging(false);
-      };
-
-      return(
-        <div className="double-slider-box">
-        <div className="input-box">
-            <div className="min-box">
-            <input
-                type="number"
-                value={minInput}
-                onChange={handleMinInput}
-                onKeyDown={(e) => handleInputKeyDown(e, "min")}
-                className="min-input"
-                min={sliderMinValue}
-                max={maxVal - minGap}
-            />
-            
+    return (
+        <div className="single-slider-box">
+            <div className="input-box">
+                <input
+                    type="number"
+                    value={currentValue}
+                    onChange={handleInputChange}
+                    className="value-input"
+                    min={min}
+                    max={max}
+                />
             </div>
-            <div className="max-box">
-            <input
-                type="number"
-                value={maxInput}
-                onChange={handleMaxInput}
-                onKeyDown={(e) => handleInputKeyDown(e, "max")}
-                className="max-input"
-                min={minVal + minGap}
-                max={sliderMaxValue}
-            />
-            
+            <div className="range-slider">
+                <div 
+                    className="slider-track"
+                    style={{
+                        background: `linear-gradient(to right, #6c4b0a ${(currentValue - min) / (max - min) * 100}%, #d1d1d1 0%)`
+                    }}
+                ></div>
+                <input
+                    type="range"
+                    min={min}
+                    max={max}
+                    value={currentValue}
+                    onChange={handleSlide}
+                    onMouseDown={startDrag}
+                    onMouseUp={stopDrag}
+                    onTouchStart={startDrag}
+                    onTouchEnd={stopDrag}
+                    className="slider-input"
+                />
+                {isDragging && (
+                    <div 
+                        className="value-tooltip"
+                        style={{
+                            left: `${(currentValue - min) / (max - min) * 100}%`
+                        }}
+                    >
+                        £{currentValue}
+                    </div>
+                )}
             </div>
         </div>
-        <div className="range-slider">
-            <div className="slider-track"></div>
-            <input
-            type="range"
-            min={sliderMinValue}
-            max={sliderMaxValue}
-            value={minVal}
-            onChange={slideMin}
-            onMouseDown={startDrag}
-            onMouseUp={stopDrag}
-            onTouchStart={startDrag}
-            onTouchEnd={stopDrag}
-            className="min-val"
-            />
-            <input
-            type="range"
-            min={sliderMinValue}
-            max={sliderMaxValue}
-            value={maxVal}
-            onChange={slideMax}
-            onMouseDown={startDrag}
-            onMouseUp={stopDrag}
-            onTouchStart={startDrag}
-            onTouchEnd={stopDrag}
-            className="max-val"
-            />
-            {isDragging && <div className="min-tooltip">{minVal}</div>}
-            {isDragging && <div className="max-tooltip">{maxVal}</div>}
-        </div>
-        </div>
-  );
+    );
 }
 
 export default Slider;
