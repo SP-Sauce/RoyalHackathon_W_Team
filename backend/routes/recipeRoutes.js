@@ -20,6 +20,46 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.post("/filter", async (req, res) => {
+    try {
+        const { cuisines, dietaryRequirements } = req.body;
+        const filter = {};
+
+        // Build filter object based on request body
+        if (cuisines && cuisines.length > 0) {
+            filter.cuisine_type = { 
+                $in: cuisines.map(c => c.toLowerCase()) 
+            };
+        }
+
+        if (dietaryRequirements && dietaryRequirements.length > 0) {
+            // AND condition for dietary requirements
+            filter.dietary_requirements = {
+                $all: dietaryRequirements.map(req => req.toLowerCase())
+            };
+        }
+
+        console.log("Applied filter:", JSON.stringify(filter, null, 2));
+
+        const recipes = await Recipe.find(filter);
+        
+        console.log(`Found ${recipes.length} matching recipes`);
+        
+        res.json({ 
+            success: true, 
+            recipes,
+            filterApplied: filter,
+            resultCount: recipes.length
+        });
+    } catch (error) {
+        console.error("Filter Error:", error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
 // Get all recipes
 router.get("/", async (req, res) => {
     try {
