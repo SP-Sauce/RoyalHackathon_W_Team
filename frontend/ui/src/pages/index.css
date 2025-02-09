@@ -44,7 +44,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
   }
   
   .centered-box {
@@ -422,6 +422,7 @@
      ========================================================================== */
   .quantity-controls {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
@@ -705,4 +706,17 @@
   .floating-selectable-divs {
     grid-template-columns: 1fr;
   }
+}
+
+.theme-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: var(--accent-color);
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  box-shadow: var(--shadow-light);
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import './index.css'
 import Modal from 'react-modal'
 
@@ -12,6 +12,8 @@ const MealPlan = () => {
         [location.state?.recipes]
     );
     const budget = location.state?.budget || 0;
+
+    const navigate = useNavigate()
 
     const [displayedRecipes, setDisplayedRecipes] = useState([])
     const [selectedRecipe, setSelectedRecipe] = useState(null)
@@ -76,11 +78,16 @@ const MealPlan = () => {
         });
     }, [displayedRecipes, budget]);
 
+    const purchase = () => {
+      return navigate('/shopping-list')
+    }
+
     return (
         <div className='meal-plan-overview'>
             <div className='meal-plan-leftside'>
                 <div className='meal-plan-stats'>
                     <h2>Your Meal Plan</h2>
+                    <button className='theme-button' onClick={purchase}>Purchase</button>
                     <div className='budget-info'>
                         <p>Budget: £{budget.toFixed(2)}</p>
                         <p>Spent: £{stats.totalCost.toFixed(2)}</p>

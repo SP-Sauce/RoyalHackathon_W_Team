@@ -7,13 +7,13 @@ import Slider from './DietaryReqComponents/Slider'
 //import UpdateQuestionArrow from './DietaryReqComponents/UpdateQuestionArrow'
 
 const DietaryRequirements = () => {
-    const cuisines = ['south asian', 'italian', 'mediterranean', 'chinese', 'middle-eastern', 'other']
+    const cuisines = ['south asian', 'italian', 'mediterranean', 'chinese', 'middle-eastern', 'japanese', 'other']
     const navigate = useNavigate()
     
     // State management
     const [question, setQuestion] = useState(1)
     const [selectedCuisines, setSelectedCuisines] = useState([])
-    const [budget, setBudget] = useState(500)
+    const [budget, setBudget] = useState(100)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
     const dietaryRequirements = useRef()
@@ -121,7 +121,7 @@ const DietaryRequirements = () => {
                         <h3>What is your monthly food budget?</h3>
                         <Slider 
                             min={0} 
-                            max={1000} 
+                            max={100} 
                             value={budget}
                             onChange={setBudget}
                         />
