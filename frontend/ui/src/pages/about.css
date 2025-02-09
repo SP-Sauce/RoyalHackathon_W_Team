@@ -1,0 +1,105 @@
+.about-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto repeat(2, 1fr);
+    gap: 15px;
+    padding: 2rem;
+    background-color: #faf3e0; /* Softer Cream */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh; /* Full screen height */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centered Logo at the Top */
+.main-logo {
+    grid-column: span 2;
+    display: block;
+    margin: 20px auto 20px;
+    width: 200px;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Box Styling */
+.about-box, .hackathon-box, .api-box, .verdn-box {
+    color: #ffffff; 
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 250px; /* Uniform height */
+}
+
+/* Consistent Background Colors */
+.about-box { background-color: #e7d2b9; }
+.hackathon-box { background-color: #e7d2b9; }
+.api-box { background-color: #e7d2b9; }
+.verdn-box { background-color: #e7d2b9; }
+
+/* Verdant Logo */
+.verdn-logo {
+    width: 70px;
+    display: block;
+    margin: 10px auto;
+    animation: popIn 1s ease-in-out;
+}
+
+/* Hover Effects */
+.about-box:hover, .hackathon-box:hover, .api-box:hover, .verdn-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Typography */
+h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #3d2c1e;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #5a4433;
+}
+
+a {
+    color: #6c4b0a;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+    .about-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .about-box, .hackathon-box, .api-box, .verdn-box {
+        width: 90%;
+        height: auto;
+    }
+}
