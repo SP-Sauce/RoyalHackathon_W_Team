@@ -57,7 +57,8 @@
   /* Input & Form Styles */
   .input-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    flex-direction: row;
     align-items: center;
     width: 100%;
   }
@@ -71,7 +72,7 @@
   
   /* Rounded Input */
   .rounded-input {
-    width: 300px;
+    width: 30rem;
     padding: 7px;
     border: 2px solid var(--border-color);
     border-radius: 30px;
@@ -82,6 +83,20 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
+
+  .rounded-btn{
+    width: 20rem;
+    padding: 7px;
+    border: 2px solid var(--border-color);
+    border-radius: 30px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    background-color: var(--secondary-bg);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
   .rounded-input:focus {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   }
@@ -735,4 +750,15 @@
 
 .manual-button:hover {
   background-color: #ec971f;
+}
+
+.invisible-btn{
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  color: inherit; /* Keeps text color the same as surrounding text */
+  cursor: pointer; /* Ensures it still functions as a button */
+  padding: 0;
+  margin: 0;
 }
