@@ -1,0 +1,81 @@
+/* ==========================================================================  
+   Navbar Styles (Fixed at the Top, Full Width)  
+   ========================================================================== */
+  div{
+    display: flex;
+    flex-direction: column;
+  }
+  
+   div > nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-bg);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    box-shadow: var(--shadow-medium);
+    border-bottom: 2px solid var(--border-color);
+    z-index: 1000; /* Ensure navbar stays above all content */
+  }
+  
+  div > nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+  }
+  
+  div > nav ul li {
+    display: inline-block;
+  }
+  
+  div > nav ul li a {
+    text-decoration: none;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+  }
+  
+  div > nav ul li a:hover {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-light);
+  }
+  
+  div > nav ul li a.active {
+    background-color: var(--accent-hover);
+    color: white;
+    box-shadow: var(--shadow-medium);
+  }
+  
+  /* Add padding to body to prevent content overlap with navbar */
+  body {
+    padding-top: 80px; /* Adjust to match the navbar height */
+  }
+  
+  /* Responsive Navbar */
+  @media (max-width: 768px) {
+    div > nav ul {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    div > nav ul li {
+      width: 100%;
+      text-align: center;
+    }
+  
+    div > nav ul li a {
+      display: block;
+      width: 100%;
+    }
+  }
+  
