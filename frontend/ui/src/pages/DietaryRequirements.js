@@ -4,10 +4,10 @@ import axios from 'axios'
 import './index.css'
 import SelectableDiv from './DietaryReqComponents/SelectableDiv'
 import Slider from './DietaryReqComponents/Slider'
-import UpdateQuestionArrow from './DietaryReqComponents/UpdateQuestionArrow'
+//import UpdateQuestionArrow from './DietaryReqComponents/UpdateQuestionArrow'
 
 const DietaryRequirements = () => {
-    const cuisines = ['South Asian', 'Italian', 'Mediterranean', 'Chinese', 'Middle-Eastern', 'Other']
+    const cuisines = ['south asian', 'italian', 'mediterranean', 'chinese', 'middle-eastern', 'other']
     const navigate = useNavigate()
     
     // State management
@@ -28,7 +28,9 @@ const DietaryRequirements = () => {
     }
 
     const decrementPage = () => {
-        setQuestion(prev => prev - 1)
+        if (question > 1) {
+            setQuestion(prev => prev - 1)
+        }
     }
 
     // Cuisine selection handler
@@ -40,43 +42,62 @@ const DietaryRequirements = () => {
         )
     }
 
-    // Submit handler
     const handleSubmit = async () => {
         try {
+            if (selectedCuisines.length === 0) {
+                setError('Please select at least one cuisine')
+                setQuestion(1)
+                return
+            }
+    
+            const dietaryReqs = dietaryRequirements.current?.value.trim()
+            if (!dietaryReqs) {
+                setError('Please enter dietary requirements')
+                return
+            }
+    
             setIsLoading(true)
             setError(null)
             
-            const response = await axios.post('http://localhost:3001/api/recipes/filter', {
-                cuisines: selectedCuisines,
-                dietaryRequirements: dietaryRequirements.current.value.split(',').map(r => r.trim()),
-                maxBudget: budget
-            })
-
+            // Clean and validate dietary requirements
+            const cleanedDietaryReqs = dietaryReqs
+                .split(',')
+                .map(req => req.trim().toLowerCase())
+                .filter(req => req.length > 0)  // Remove empty entries
+    
+            if (cleanedDietaryReqs.length === 0) {
+                setError('Please enter valid dietary requirements')
+                return
+            }
+    
+            const requestBody = {
+                cuisines: selectedCuisines.map(c => c.toLowerCase()),
+                dietaryRequirements: cleanedDietaryReqs
+            }
+            
+            console.log('Sending request with:', JSON.stringify(requestBody, null, 2))
+                
+            const response = await axios.post('http://localhost:3001/api/recipes/filter', requestBody)
+        
             if (response.data.success) {
-                navigate('/mealplan/', { 
-                    state: { recipes: response.data.recipes }
+                if (response.data.recipes.length === 0) {
+                    setError('No recipes found matching your criteria')
+                    return
+                }
+                navigate('/mealplan', { 
+                    state: { 
+                        recipes: response.data.recipes,
+                        budget: budget
+                    }
                 })
             }
         } catch (error) {
-            console.error('Error filtering recipes:', error)
+            console.error('Request failed:', error.response || error)
             setError('Failed to filter recipes. Please try again.')
-            setQuestion(3) // Stay on current page if error
         } finally {
             setIsLoading(false)
         }
     }
-
-    // Generate cuisine selection elements
-    const cuisineElements = cuisines.map((cuisine) => (
-        <SelectableDiv 
-            key={cuisine}
-            updateSelectedCuisines={updateSelectedCuisines} 
-            name={cuisine}
-            selected={selectedCuisines.includes(cuisine)}
-        >
-            {cuisine}
-        </SelectableDiv>
-    ))
 
     return (
         <div className='bg center-container'>
@@ -85,21 +106,40 @@ const DietaryRequirements = () => {
                 {isLoading && <div className="loading-spinner">Loading...</div>}
                 
                 {question === 1 && (
-                    <div>
+                    <div className="question-container">
                         <h3>What are your favorite cuisines?</h3>
                         <div className='floating-selectable-divs'>
-                            {cuisineElements} 
+                            {cuisines.map((cuisine) => (
+                                <SelectableDiv 
+                                    key={cuisine}
+                                    updateSelectedCuisines={updateSelectedCuisines} 
+                                    name={cuisine}
+                                    selected={selectedCuisines.includes(cuisine)}
+                                >
+                                    {cuisine.charAt(0).toUpperCase() + cuisine.slice(1)}
+                                </SelectableDiv>
+                            ))}
                         </div>
-                        <UpdateQuestionArrow 
-                            questionNumber={question} 
-                            increment={incrementPage} 
-                            decrement={decrementPage}
-                        />
+                        <div className="navigation-buttons">
+                            <button 
+                                onClick={decrementPage} 
+                                className="nav-button"
+                                disabled={question === 1}
+                            >
+                                Back
+                            </button>
+                            <button 
+                                onClick={incrementPage} 
+                                className="nav-button"
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
 
                 {question === 2 && (
-                    <div>
+                    <div className="question-container">
                         <h3>What is your monthly food budget?</h3>
                         <Slider 
                             min={0} 
@@ -108,34 +148,48 @@ const DietaryRequirements = () => {
                             onChange={setBudget}
                         />
                         <div className="budget-display">£{budget}</div>
-                        <UpdateQuestionArrow 
-                            questionNumber={question} 
-                            increment={incrementPage} 
-                            decrement={decrementPage} 
-                        />
+                        <div className="navigation-buttons">
+                            <button 
+                                onClick={decrementPage} 
+                                className="nav-button"
+                            >
+                                Back
+                            </button>
+                            <button 
+                                onClick={incrementPage} 
+                                className="nav-button"
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
 
                 {question === 3 && (
-                    <div>
+                    <div className="question-container">
                         <h3>What are your dietary requirements?</h3>
                         <textarea 
                             ref={dietaryRequirements}
-                            placeholder="Enter requirements separated by commas (e.g., vegetarian, gluten-free)"
+                            placeholder="Enter requirements separated by commas (e.g., vegetarian, gluten-free, halal)"
                             className="dietary-textarea"
+                            defaultValue=""  // Ensure it starts empty
+                            aria-label="Dietary Requirements"
                         />
-                        <button 
-                            onClick={handleSubmit}
-                            className="submit-button"
-                            disabled={isLoading}
-                        >
-                            Submit
-                        </button>
-                        <UpdateQuestionArrow 
-                            questionNumber={question} 
-                            increment={incrementPage} 
-                            decrement={decrementPage} 
-                        />
+                        <div className="navigation-buttons">
+                            <button 
+                                onClick={decrementPage} 
+                                className="nav-button"
+                            >
+                                Back
+                            </button>
+                            <button 
+                                onClick={handleSubmit}
+                                className="submit-button"
+                                disabled={isLoading}
+                            >
+                                Submit
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

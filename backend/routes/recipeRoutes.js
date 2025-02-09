@@ -20,28 +20,31 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Advanced Filter Endpoint with POST
 router.post("/filter", async (req, res) => {
     try {
-        const { cuisines, dietaryRequirements, maxBudget } = req.body;
+        const { cuisines, dietaryRequirements } = req.body;
         const filter = {};
 
         // Build filter object based on request body
         if (cuisines && cuisines.length > 0) {
-            filter.cuisine_type = { $in: cuisines };
+            filter.cuisine_type = { 
+                $in: cuisines.map(c => c.toLowerCase()) 
+            };
         }
 
         if (dietaryRequirements && dietaryRequirements.length > 0) {
-            filter.dietary_requirements = { $all: dietaryRequirements };
+            // AND condition for dietary requirements
+            filter.dietary_requirements = {
+                $all: dietaryRequirements.map(req => req.toLowerCase())
+            };
         }
 
-        if (maxBudget) {
-            filter.cost_per_serving = { $lte: Number(maxBudget) };
-        }
-
-        console.log("Applied filter:", filter);
+        console.log("Applied filter:", JSON.stringify(filter, null, 2));
 
         const recipes = await Recipe.find(filter);
+        
+        console.log(`Found ${recipes.length} matching recipes`);
+        
         res.json({ 
             success: true, 
             recipes,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import Meal from './MealPlanComponents/Meal'
 import './index.css'
@@ -8,7 +8,17 @@ Modal.setAppElement("#root")
 
 const MealPlan = () => {
     const location = useLocation();
-    const filteredRecipes = location.state?.recipes || [];
+    const filteredRecipes = useMemo(() => 
+        location.state?.recipes || [], 
+        [location.state?.recipes]
+    );
+    const budget = location.state?.budget || 0;
+
+    // Filter recipes by budget here instead of in backend
+    const budgetFilteredRecipes = useMemo(() => 
+        filteredRecipes.filter(recipe => recipe.cost_per_serving <= budget),
+        [filteredRecipes, budget]
+    );
 
     const [allRecipes, setAllRecipes] = useState([])
     const [displayedRecipes, setDisplayedRecipes] = useState([])
@@ -21,66 +31,76 @@ const MealPlan = () => {
         carbohydrates: 0
     })
 
-    useEffect(() => {
-        if (filteredRecipes.length > 0) {
-            setAllRecipes(filteredRecipes);
-            setDisplayedRecipes(filteredRecipes);
-            calculateStats(filteredRecipes);
-            return;
-        }
-
-        const fetchRecipes = async () => {
-            try {
-                const response = await fetch('/api/recipes')
-                const data = await response.json()
-                if (data.success) {
-                    setAllRecipes(data.recipes)
-                    setDisplayedRecipes(data.recipes)
-                    calculateStats(data.recipes)
-                }
-            } catch (error) {
-                console.error('Failed to fetch recipes:', error)
-            }
-        }
-        fetchRecipes()
-    }, [filteredRecipes])
-
+    // Calculate stats when recipes change
     const calculateStats = (recipesList) => {
-        const stats = recipesList.reduce((acc, recipe) => {
-            return {
-                totalCost: acc.totalCost + (recipe.cost_per_serving || 0),
-                calories: acc.calories + (recipe.calories_per_serving || 0),
-                protein: acc.protein + (recipe.protein_per_serving || 0),
-                carbohydrates: acc.carbohydrates + (recipe.carbs_per_serving || 0)
-            }
-        }, {
+        const newStats = recipesList.reduce((acc, recipe) => ({
+            totalCost: acc.totalCost + (recipe.cost_per_serving || 0),
+            calories: acc.calories + (recipe.calories_per_serving || 0),
+            protein: acc.protein + (recipe.protein_per_serving || 0),
+            carbohydrates: acc.carbohydrates + (recipe.carbs_per_serving || 0)
+        }), {
             totalCost: 0,
             calories: 0,
             protein: 0,
             carbohydrates: 0
-        })
-        setStats(stats)
-    }
+        });
+        setStats(newStats);
+    };
+
+    // Handle filtered recipes
+    useEffect(() => {
+        if (budgetFilteredRecipes.length > 0) {
+            setAllRecipes(budgetFilteredRecipes);
+            setDisplayedRecipes(budgetFilteredRecipes);
+            calculateStats(budgetFilteredRecipes);
+        } else {
+            // Only fetch all recipes if no filtered recipes exist
+            const fetchRecipes = async () => {
+                try {
+                    const response = await fetch('/api/recipes');
+                    const data = await response.json();
+                    if (data.success) {
+                        setAllRecipes(data.recipes);
+                        setDisplayedRecipes(data.recipes);
+                        calculateStats(data.recipes);
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch recipes:', error);
+                }
+            };
+            fetchRecipes();
+        }
+    }, [budgetFilteredRecipes]);
 
     const viewIngredients = (e) => {
-        e.preventDefault()
-        const recipeName = e.currentTarget.getAttribute("data-name")
-        const recipe = allRecipes.find(r => r.recipe_name === recipeName)
-        setSelectedRecipe(recipe)
-        setIsOpen(true)
-    }
+        e.preventDefault();
+        const recipeName = e.currentTarget.getAttribute("data-name");
+        const recipe = allRecipes.find(r => r.recipe_name === recipeName);
+        setSelectedRecipe(recipe);
+        setIsOpen(true);
+    };
 
     return (
         <div className='meal-plan-overview'>
             <Modal 
                 isOpen={isOpen}
-                parentSelector={() => document.getElementById('meal-plan-rightside')}
                 onRequestClose={() => setIsOpen(false)}
                 style={{
-                    overlay: { backgroundColor: "rgba(0, 0, 0, 0.3)" }, 
-                    content: { position: "absolute", inset: "10px", borderRadius: "8px" },
+                    overlay: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+                    content: { 
+                        position: "absolute",
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: '600px',
+                        width: '90%',
+                        maxHeight: '90vh',
+                        overflow: 'auto',
+                        borderRadius: "8px"
+                    }
                 }}
             >
+                {/* Modal content */}
                 <h2>{selectedRecipe?.recipe_name || 'Recipe Details'}</h2>
                 <div className="recipe-details">
                     {selectedRecipe ? (
@@ -90,7 +110,7 @@ const MealPlan = () => {
                                 <p>Prep Time: {selectedRecipe.prep_time} mins</p>
                                 <p>Cook Time: {selectedRecipe.cook_time} mins</p>
                                 <p>Servings: {selectedRecipe.servings}</p>
-                                <p>Cost per Serving: £{selectedRecipe.cost_per_serving}</p>
+                                <p>Cost per Serving: £{selectedRecipe.cost_per_serving?.toFixed(2)}</p>
                             </div>
                             <div className="dietary-requirements">
                                 <h3>Dietary Requirements:</h3>
@@ -123,7 +143,7 @@ const MealPlan = () => {
                 <button onClick={() => setIsOpen(false)}>Close</button>
             </Modal>
 
-            {/* Left side - Statistics only */}
+            {/* Main content */}
             <div className='meal-plan-leftside'>
                 <div className='meal-plan-bottomleft'>
                     <div className='meal-plan-bl-cost'>
@@ -143,16 +163,14 @@ const MealPlan = () => {
                 </div>
             </div>
 
-            {/* Right side - Recipe grid */}
             <div id='meal-plan-rightside' className='meal-plan-rightside'>
-                {displayedRecipes && displayedRecipes.map((recipe, index) => (
+                {displayedRecipes?.map((recipe, index) => (
                     <Meal 
                         key={recipe._id || index}
                         name={recipe.recipe_name}
                         viewIngredients={viewIngredients}
                     >
-                        <div className="meal-card" onClick={(e) => {
-                            e.preventDefault();
+                        <div className="meal-card" onClick={() => {
                             setSelectedRecipe(recipe);
                             setIsOpen(true);
                         }}>
@@ -166,14 +184,14 @@ const MealPlan = () => {
                         </div>
                     </Meal>
                 ))}
-                {displayedRecipes.length === 0 && (
+                {!displayedRecipes?.length && (
                     <div className="no-recipes">
                         No recipes match your criteria
                     </div>
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default MealPlan
+export default MealPlan;
