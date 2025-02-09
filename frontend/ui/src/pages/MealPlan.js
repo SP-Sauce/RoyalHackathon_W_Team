@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MealWeek from './MealPlanComponents/MealWeek'
+import { useLocation } from 'react-router-dom'
 import Meal from './MealPlanComponents/Meal'
 import './index.css'
 import Modal from 'react-modal'
@@ -7,14 +7,11 @@ import Modal from 'react-modal'
 Modal.setAppElement("#root")
 
 const MealPlan = () => {
-    const mealPlans = ['Week1', 'Week2', 'Week3', 'Week4']
-    const meals = ['1', '2', '3', '4', '5', '6', '7']
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const location = useLocation();
+    const filteredRecipes = location.state?.recipes || [];
 
     const [allRecipes, setAllRecipes] = useState([])
     const [displayedRecipes, setDisplayedRecipes] = useState([])
-    const [mealPlanView, setMealPlanView] = useState('Week1')
-    const [recipes, setRecipes] = useState([])
     const [selectedRecipe, setSelectedRecipe] = useState(null)
     const [isOpen, setIsOpen] = useState(false)
     const [stats, setStats] = useState({
@@ -24,39 +21,30 @@ const MealPlan = () => {
         carbohydrates: 0
     })
 
-    // Fetch recipes when component mounts
     useEffect(() => {
+        if (filteredRecipes.length > 0) {
+            setAllRecipes(filteredRecipes);
+            setDisplayedRecipes(filteredRecipes);
+            calculateStats(filteredRecipes);
+            return;
+        }
+
         const fetchRecipes = async () => {
             try {
                 const response = await fetch('/api/recipes')
                 const data = await response.json()
                 if (data.success) {
                     setAllRecipes(data.recipes)
-                    // Initially show Week1 recipes
-                    const week1Recipes = data.recipes.slice(0, 7)
-                    setDisplayedRecipes(week1Recipes)
-                    setRecipes(data.recipes) // Keep for backward compatibility
-                    calculateStats(week1Recipes)
+                    setDisplayedRecipes(data.recipes)
+                    calculateStats(data.recipes)
                 }
             } catch (error) {
                 console.error('Failed to fetch recipes:', error)
             }
         }
         fetchRecipes()
-    }, [])
+    }, [filteredRecipes])
 
-    // Add new useEffect for week changes
-    useEffect(() => {
-        if (allRecipes.length > 0) {
-            const weekNumber = parseInt(mealPlanView.replace('Week', ''))
-            const startIndex = (weekNumber - 1) * 7
-            const weekRecipes = allRecipes.slice(startIndex, startIndex + 7)
-            setDisplayedRecipes(weekRecipes)
-            calculateStats(weekRecipes)
-        }
-    }, [mealPlanView, allRecipes])
-
-    // Calculate statistics based on recipes
     const calculateStats = (recipesList) => {
         const stats = recipesList.reduce((acc, recipe) => {
             return {
@@ -74,17 +62,12 @@ const MealPlan = () => {
         setStats(stats)
     }
 
-    // Update viewIngredients to use recipe_name
     const viewIngredients = (e) => {
         e.preventDefault()
         const recipeName = e.currentTarget.getAttribute("data-name")
-        const recipe = allRecipes.find(r => r.recipe_name === recipeName) // Changed from recipes to allRecipes
+        const recipe = allRecipes.find(r => r.recipe_name === recipeName)
         setSelectedRecipe(recipe)
         setIsOpen(true)
-    }
-
-    const toggleMealPlanView = (e) => {
-        setMealPlanView(`Week${e.target.id}`)
     }
 
     return (
@@ -140,28 +123,12 @@ const MealPlan = () => {
                 <button onClick={() => setIsOpen(false)}>Close</button>
             </Modal>
 
-            {/* left side */}
+            {/* Left side - Statistics only */}
             <div className='meal-plan-leftside'>
-                {/* Meal weeks */}
-                <div className='meal-list'>
-                    {mealPlans.map((item, index) => (
-                        <MealWeek 
-                            key={index}
-                            id={index+1} 
-                            mealPlanView={mealPlanView} 
-                            toggleMealPlanView={toggleMealPlanView}
-                        >
-                            {item}
-                        </MealWeek>
-                    ))}
-                </div>
-                {/* Statistics */}
                 <div className='meal-plan-bottomleft'>
-                    {/*Total cost */}
                     <div className='meal-plan-bl-cost'>
                         Total cost: £{stats.totalCost.toFixed(2)}
                     </div>
-                    {/* Vertical stats */}
                     <div className='meal-plan-bl-col'>
                         <div className='meal-plan-bl-col-element'>
                             Calories: {stats.calories.toFixed(0)} kcal
@@ -176,10 +143,11 @@ const MealPlan = () => {
                 </div>
             </div>
 
-            {/* Right side */}
+            {/* Right side - Recipe grid */}
             <div id='meal-plan-rightside' className='meal-plan-rightside'>
                 {displayedRecipes && displayedRecipes.map((recipe, index) => (
                     <Meal 
+                        key={recipe._id || index}
                         name={recipe.recipe_name}
                         viewIngredients={viewIngredients}
                     >
@@ -188,9 +156,6 @@ const MealPlan = () => {
                             setSelectedRecipe(recipe);
                             setIsOpen(true);
                         }}>
-                            <div className="day-label">
-                                {daysOfWeek[index]}
-                            </div>
                             <h3>{recipe.recipe_name}</h3>
                             <p>{recipe.cuisine_type} • {recipe.prep_time + recipe.cook_time} mins</p>
                             <p>£{(recipe.cost_per_serving || 0).toFixed(2)} per serving</p>
@@ -201,6 +166,11 @@ const MealPlan = () => {
                         </div>
                     </Meal>
                 ))}
+                {displayedRecipes.length === 0 && (
+                    <div className="no-recipes">
+                        No recipes match your criteria
+                    </div>
+                )}
             </div>
         </div>
     )
