@@ -8,7 +8,7 @@ const Home = () => {
       <div className='bg center-container'>
         <img src='/logo.png' alt='/public/logo.png' width='700rem' />
         <div className='input-container'>
-          <button type='text'  className='rounded-input'><Link to='dietary'>Kickstart your meal plan now</Link></button>
+          <button type='text'  className='rounded-input'><Link to='ai-chat'>Kickstart your meal plan now</Link></button>
         </div>
       </div>
     
