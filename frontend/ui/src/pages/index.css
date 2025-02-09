@@ -634,6 +634,7 @@
   transition: all 0.2s ease;
   background-color: var(--light-bg);
   color: var(--text-color);
+  align-self: center;
 }
 .dietary-textarea:focus {
   outline: none;
