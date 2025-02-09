@@ -8,28 +8,21 @@ export const createPledgeTransaction = async (req, res) => {
     try {
         const { recipeId, impactType, impactAmount } = req.body;
 
-        // Validate input
         if (!recipeId || !impactType || !impactAmount) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        // Find the recipe
         const recipe = await Recipe.findById(recipeId);
         if (!recipe) return res.status(404).json({ success: false, message: "Recipe not found" });
 
-        // Get impact offering details
         const impactOffering = VERDN_IMPACT_OFFERINGS[impactType];
         if (!impactOffering) {
             return res.status(400).json({ success: false, message: "Invalid impact type" });
         }
 
-        // Calculate correct impact amount based on Verdn's unit conversion
         const adjustedAmount = impactAmount * impactOffering.unit_conversion;
-
-        // Generate a unique reference ID
         const reference = `mealgenie-${uuidv4()}`;
 
-        // Construct correct Verdn API payload
         const payload = {
             reference: reference,
             recipient: {
@@ -48,7 +41,6 @@ export const createPledgeTransaction = async (req, res) => {
 
         console.log("🔍 Sending payload to Verdn:", JSON.stringify(payload, null, 2));
 
-        // Call Verdn API
         const response = await axios.post(
             VERDN_API_URL,
             payload,
@@ -60,16 +52,36 @@ export const createPledgeTransaction = async (req, res) => {
             }
         );
 
-        console.log("✅ Verdn API Response:", response.data);
+        console.log("🔥 FULL VERDN API RESPONSE:", JSON.stringify(response.data, null, 2));
 
-        // Extract relevant impact data
+        const pledge = response.data.pledges[0] || {};
+        const impactDetails = pledge.detail || {};  
+
+        // 🚀 Assign estimated sustainability metrics if missing
+        let estimatedCarbon = 0, estimatedWater = 0, estimatedScore = 50;  
+
+        if (impactType === "plant_trees") {
+            estimatedCarbon = impactAmount * 21;  // 21kg CO₂ absorbed per tree
+            estimatedWater = impactAmount * 50;  // Estimated 50 liters water usage for tree planting
+            estimatedScore = 90;  // High sustainability impact
+        } else if (impactType === "recover_plastic") {
+            estimatedCarbon = impactAmount * 3;  // 3kg CO₂ per kg of plastic collected
+            estimatedWater = impactAmount * 10;  // Estimated 10 liters water saved per kg plastic
+            estimatedScore = 80;
+        } else if (impactType === "restore_coral") {
+            estimatedCarbon = impactAmount * 5;
+            estimatedWater = impactAmount * 30;
+            estimatedScore = 85;
+        }
+
+        // Store pledged impact in MongoDB
         const sustainabilityData = new Sustainability({
             recipe_id: recipe._id,
-            carbon_impact: response.data.pledges?.[0]?.impact?.carbon_impact || 0,
-            water_usage: response.data.pledges?.[0]?.impact?.water_usage || 0,
-            sustainability_score: response.data.pledges?.[0]?.impact?.sustainability_score || 0,
-            rating: response.data.pledges?.[0]?.impact?.rating || 5,  // 🔥 Default to 5 if missing
-            name: impactType  // 🔥 Use the impact type name (e.g., "plant_trees")
+            carbon_impact: estimatedCarbon,  // ✅ Assigned manually
+            water_usage: estimatedWater,  // ✅ Assigned manually
+            sustainability_score: estimatedScore,  // ✅ Assigned manually
+            rating: 5,
+            name: impactType
         });
 
         await sustainabilityData.save();

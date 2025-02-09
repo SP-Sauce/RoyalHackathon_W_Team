@@ -23,8 +23,10 @@ const RecipeSchema = new mongoose.Schema({
     prep_time: { type: Number, required: true },
     cook_time: { type: Number, required: true },
     servings: { type: Number, required: true },
+    impact_type: { type: String, enum: ["plant_trees", "recover_plastic", "restore_coral"], required: true },
+    impact_amount: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now }
 });
 
-// ✅ Export the model correctly
+// Export the model correctly
 export default mongoose.model("Recipe", RecipeSchema);

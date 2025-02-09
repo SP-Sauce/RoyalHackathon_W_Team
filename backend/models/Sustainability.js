@@ -9,5 +9,6 @@ const SustainabilitySchema = new mongoose.Schema({
     name: { type: String, required: false },  // 🔥 Fixed: Made `name` optional
     createdAt: { type: Date, default: Date.now }
 });
+SustainabilitySchema.index({ recipe_id: 1 });
 
 export default mongoose.model("Sustainability", SustainabilitySchema);
