@@ -274,98 +274,198 @@ box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     text-decoration: underline;
   }
 
-.meal-plan-overview{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    padding: 5rem;
-}
-  
-.meal-plan-leftside{
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    border: .4rem solid black;
-    border-radius: .7rem;
-    width: 45%;
-    height: 80vh;
+
+/* Layout Components */
+.meal-plan-overview {
+  display: grid;
+  grid-template-columns: 45% 45%;
+  gap: 5%;
+  padding: 5rem;
+  height: 90vh;
 }
 
-.meal-plan-rightside{
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    border: .4rem solid black;
-    border-radius: .7rem;
-    width: 45%;
-    height: 80vh;
-    justify-content: space-around;
+/* Left Side Panel */
+.meal-plan-leftside {
+  background-color: white;
+  border: 0.4rem solid black;
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
 }
 
-.weekly-meal-plan{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    border: 2px none black;
-    border-radius: 1.3rem;
-    width: 80%;
-    text-align: center;
-    align-self: center;
+.meal-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 65%;
+  padding: 20px;
 }
 
-.meal-list{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 65%;
+.weekly-meal-plan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  border-radius: 1.3rem;
 }
 
-.meal-list-updt{
-    height: 10%;
-    align-self: center;
-    width: 80%;
-    background-color: #f4eee2;
-    border-radius: 2rem;
-    text-align: center;
+.meal-list-updt {
+  background-color: #f4eee2;
+  border-radius: 2rem;
+  padding: 1rem;
+  width: 80%;
+  text-align: center;
+  margin: 10px auto;
 }
 
-.selected-meal-plan{
-    background-color: #555;
-    padding: 1rem;
+.selected-meal-plan {
+  background-color: #555;
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
 
-.unselected-meal-plan{
-    background-color: #f4eee2;
-    padding: 1rem;
+.unselected-meal-plan {
+  background-color: #f4eee2;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
 
-.meal-plan-bottomleft{
-    display: flex;
-    flex-direction: row;
-    width: 85%;
-    justify-content: center;
-    padding: 3rem;
-    align-self: center;
+/* Statistics Panel */
+.meal-plan-bottomleft {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 2rem;
+  margin-top: auto;
 }
 
-.meal-plan-bl-cost{
-    background-color: #f4eee2;
-    padding: 1rem;
-    border-radius: 1rem;
-    width: 50%;
+.meal-plan-bl-cost {
+  background-color: #f4eee2;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+  font-weight: 600;
 }
 
-.meal-plan-bl-col{
-    display: flex;
-    flex-direction: column;
-    background-color: transparent;
-    align-items: center;
-    width: 50%;
+.meal-plan-bl-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.meal-plan-bl-col-element{
-    padding: 1rem;
-    border-radius: 2rem;
-    background-color: #f4eee2;
-    width: 80%;
+.meal-plan-bl-col-element {
+  background-color: #f4eee2;
+  padding: 1rem;
+  border-radius: 2rem;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+/* Right Side Panel */
+.meal-plan-rightside {
+  background-color: white;
+  border: 0.4rem solid black;
+  border-radius: 0.7rem;
+  padding: 2rem;
+  height: 80vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Meal Cards */
+.meal-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.meal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.meal-card .day-label {
+  color: #e67e22;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.meal-card h3 {
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+}
+
+.meal-card p {
+  color: #7f8c8d;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.meal-nutrition {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #ecf0f1;
+  display: flex;
+  gap: 10px;
+}
+
+.meal-nutrition span {
+  background: #f8f9fa;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #34495e;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Recipe Details */
+.recipe-overview {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.dietary-requirements ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dietary-requirements li {
+  background-color: #e0e0e0;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+/* Modal Styles */
+.ReactModal__Content {
+  background: white !important;
+  border-radius: 12px !important;
+  padding: 25px !important;
+  max-width: 600px !important;
+  margin: auto !important;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(5px);
 }
