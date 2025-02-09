@@ -10,7 +10,7 @@ dotenv.config({ path: "./.env" });
 
 
 const app = express();
-const port = 5000;
+const port = 3001;
 
 // Middleware
 app.use(cors()); // Enable CORS for cross-origin requests
@@ -43,4 +43,4 @@ app.use("/api/verdn", verdnRoutes);
 
 app.get("/", (req, res) => res.send("MealGenie API is running"));
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.listen(3001, () => console.log("Server running on port 3001"));
